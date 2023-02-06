@@ -1,25 +1,39 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Layout from '@/layout' //布局页
 
-const routes = [
+const constantRoutes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/login',
+    name: 'login',
+    component:  () => import('@/views/login'),
+    hidden:true
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/error',
+    name: 'error',
+    component: () => import('@/views/error'),
+    hidden:true
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: '/index',
+    children: [
+      {
+        path: '/index',
+        component: () => import('@/views/index'),
+        name: 'Index',
+        meta: { title: '首页', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
 ]
 
 const router = createRouter({
+  mode: 'history', // 去掉url中的#
   history: createWebHashHistory(),
-  routes
+  routes:constantRoutes,
+	scrollBehavior: () => ({  top: 0 })
 })
 
 export default router
